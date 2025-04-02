@@ -8,9 +8,18 @@ import GenerateImageRouter from "./routes/GenerateImage.js"
 dotenv.config();
 
 const app = express();
-app.use(cors());
+// Updated CORS configuration
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://precious-bublanina-5be943.netlify.app'],
+  credentials: true
+}));
 app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({extended: true}));
+
+// Add a test endpoint
+app.get("/api/test", (req, res) => {
+  res.status(200).json({ message: "API is running" });
+});
 
 //error handler
 app.use((err, req, res, next) => {
@@ -24,7 +33,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use("/api/post", PostRouter);
-app.use("/api/generateImage", GenerateImageRouter); // Fixed: Missing forward slash
+app.use("/api/generateImage", GenerateImageRouter);
 
 //Default get
 app.get("/", (req, res) => {
